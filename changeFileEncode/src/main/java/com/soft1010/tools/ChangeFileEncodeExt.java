@@ -79,10 +79,10 @@ public class ChangeFileEncodeExt {
 
     private static void handleEncode(ChangeFileEncode.ChangeFileEncodeContext changeFileEncodeContext){
         try {
-            BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream(new File(changeFileEncodeContext.getCurrentPath()))));
+            BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream(new File(changeFileEncodeContext.getCurrentPath())),changeFileEncodeContext.getSrcEncode()));
             File filename = new File(changeFileEncodeContext.getCurrentPath()+".tmp");
             filename.createNewFile();
-            PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename))));
+            PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename),changeFileEncodeContext.getDestEncode())));
             String line=null;
             while((line=br.readLine())!=null){
                 Pattern pattern = Pattern.compile("gbk");

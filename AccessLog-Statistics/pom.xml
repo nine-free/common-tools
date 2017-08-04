@@ -9,7 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>changeFileEncode</artifactId>
+    <artifactId>accessLog-Statistics</artifactId>
+
 
     <dependencies>
         <dependency>
@@ -19,7 +20,7 @@
     </dependencies>
 
     <build>
-        <finalName>ChangeFileEncode</finalName>
+        <finalName>AccessLogStatistics</finalName>
         <plugins>
             <!-- copy 依赖的jar包 到release/lib -->
             <plugin>
@@ -61,7 +62,7 @@
                                     <addClasspath>true</addClasspath>
                                     <classpathPrefix>lib/</classpathPrefix>
                                     <!--<mainClass>com.soft1010.tools.ChangeFileEncode</mainClass>-->
-                                    <mainClass>com.soft1010.tools.ChangeFileEncode</mainClass>
+                                    <mainClass>com.soft1010.tools.AccessLogStatistics</mainClass>
                                 </manifest>
                             </archive>
                         </configuration>
