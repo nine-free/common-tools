@@ -68,8 +68,9 @@ public class AccessLogStatistics {
         PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename),accessLogContext.getEncode())));
         for (String k:accessLogContext.getAccessLogResult().getInterfaceMapList().keySet()
                 ) {
-            System.out.println("=============key:"+k+"size:"+accessLogContext.getAccessLogResult().getInterfaceMapList().get(k).size()+"===============");
+            System.out.println("=============key:"+k+"  size:"+accessLogContext.getAccessLogResult().getInterfaceMapList().get(k).size()+"===============");
             out.write("=============key:"+k+"   size:"+accessLogContext.getAccessLogResult().getInterfaceMapList().get(k).size()+"===============");
+            out.write("\n");
             if(k.contains("edit")|| k.contains("update")){
                 for (String str : accessLogContext.getAccessLogResult().getInterfaceMapList().get(k)
                         ) {
