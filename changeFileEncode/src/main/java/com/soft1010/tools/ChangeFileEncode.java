@@ -13,92 +13,106 @@ public class ChangeFileEncode {
 
     //main 入口
     public static void main(String[] args) {
-        if(args==null || args.length!=3){
+        if (args == null || args.length != 4) {
             System.out.println("参数错误");
             System.exit(0);
         }
-        System.out.println("目标目录 "+args[0]+" \n原始编码:"+args[1] +" \n目标编码:"+args[2]);
+        System.out.println("原始目录 " + args[0] + " \n原始编码:" + args[1] + " \n目标目录:" + args[2] + " \n目标编码:" + args[3]);
         long start = System.currentTimeMillis();
         ChangeFileEncodeContext<String> changeFileEncodeContext = new ChangeFileEncodeContext();
-        changeFileEncodeContext.setPath(args[0]);
-        changeFileEncodeContext.setDestEncode(args[2]);
+        changeFileEncodeContext.setSrcPath(args[0]);
         changeFileEncodeContext.setSrcEncode(args[1]);
+        changeFileEncodeContext.setDestPath(args[2]);
+        changeFileEncodeContext.setDestEncode(args[3]);
         validate(changeFileEncodeContext);
-        if(StringUtils.isNotBlank(changeFileEncodeContext.getMsg())){
-            System.out.println("error msg:"+changeFileEncodeContext.getMsg());
+        if (StringUtils.isNotBlank(changeFileEncodeContext.getMsg())) {
+            System.out.println("error msg:" + changeFileEncodeContext.getMsg());
             System.exit(0);
         }
         handleDirectory(changeFileEncodeContext);
 
-        System.out.println("处理完成 total file num ="+changeFileEncodeContext.getTotalFileNum().intValue()+"\n 耗时="+(System.currentTimeMillis()-start)+"ms");
+        System.out.println("处理完成 total file num =" + changeFileEncodeContext.getTotalFileNum().intValue() + "\n 耗时=" + (System.currentTimeMillis() - start) + "ms");
     }
 
     //校验
-    private static void validate(ChangeFileEncodeContext changeFileEncodeContext){
-        if(StringUtils.isBlank(changeFileEncodeContext.getPath())){
-            changeFileEncodeContext.setMsg("目标路径为空");
-            return ;
+    private static void validate(ChangeFileEncodeContext changeFileEncodeContext) {
+        if (StringUtils.isBlank(changeFileEncodeContext.getSrcPath())) {
+            changeFileEncodeContext.setMsg("原始路径为空");
+            return;
         }
-        if(StringUtils.isBlank(changeFileEncodeContext.getSrcEncode())){
+        if (StringUtils.isBlank(changeFileEncodeContext.getSrcEncode())) {
             changeFileEncodeContext.setMsg("原始编码为空");
-            return ;
+            return;
         }
-        if(StringUtils.isBlank(changeFileEncodeContext.getSrcEncode())){
+        if (StringUtils.isBlank(changeFileEncodeContext.getDestEncode())) {
             changeFileEncodeContext.setMsg("目标编码为空");
-            return ;
+            return;
+        }
+        if (StringUtils.isBlank(changeFileEncodeContext.getDestPath())) {
+            changeFileEncodeContext.setMsg("目标路径为空");
+            return;
         }
 
-        File file = new File(changeFileEncodeContext.getPath());
-        if(!file.exists()){
+        File file = new File(changeFileEncodeContext.getSrcPath());
+
+        if (!file.exists()) {
             changeFileEncodeContext.setMsg("目标路径不存在");
-            return ;
+            return;
+        }
+        File destFile = new File(changeFileEncodeContext.getDestPath());
+        if (!file.exists()) {
+            file.mkdirs();
         }
     }
 
     //处理逻辑
-    private static void handleDirectory(ChangeFileEncodeContext changeFileEncodeContext){
+    private static void handleDirectory(ChangeFileEncodeContext changeFileEncodeContext) {
         File file = new File(changeFileEncodeContext.getCurrentPath());
-        if(file.isDirectory()){
+        if (file.isDirectory()) {
             File[] files = file.listFiles();
-            for (File filetmp:files
+            for (File filetmp : files
                     ) {
                 changeFileEncodeContext.setCurrentPath(filetmp.getPath());
 
-                if(filetmp.isFile()){
+                if (filetmp.isFile()) {
                     changeFileEncodeContext.getTotalFileNum().incrementAndGet();
                     handleEncode(changeFileEncodeContext);
                 }
-                if(filetmp.isDirectory()){
+                if (filetmp.isDirectory()) {
                     handleDirectory(changeFileEncodeContext);
                 }
             }
         }
     }
 
-    private static void handleEncode(ChangeFileEncodeContext changeFileEncodeContext){
+    private static void handleEncode(ChangeFileEncodeContext changeFileEncodeContext) {
         try {
-            BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream(new File(changeFileEncodeContext.getCurrentPath())),changeFileEncodeContext.getSrcEncode()));
-            File filename = new File(changeFileEncodeContext.getCurrentPath()+".tmp");
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(changeFileEncodeContext.getCurrentPath())), changeFileEncodeContext.getSrcEncode()));
+            File filename = new File(changeFileEncodeContext.getCurrentPath().replace(changeFileEncodeContext.getSrcPath(),changeFileEncodeContext.getDestPath()));
+            if(!filename.getParentFile().exists()){
+                filename.getParentFile().mkdirs();
+            }
             filename.createNewFile();
-            PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename),changeFileEncodeContext.getDestEncode())));
-            String line=null;
-            while((line=br.readLine())!=null){
+            PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), changeFileEncodeContext.getDestEncode())));
+            String line = null;
+            while ((line = br.readLine()) != null) {
                 out.write(line);
                 out.write("\n");
                 out.flush();
             }
             br.close();
             out.close();
-            new File(changeFileEncodeContext.getCurrentPath()).delete();
-            filename.renameTo(new File(changeFileEncodeContext.getCurrentPath()));
+//            new File(changeFileEncodeContext.getCurrentPath()).delete();
+//            filename.renameTo(new File(changeFileEncodeContext.getCurrentPath()));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    static class ChangeFileEncodeContext<T>{
-        private String path; //目录
+    static class ChangeFileEncodeContext<T> {
+        private String srcPath; //原始目录
+        private String destPath; //目标目录
         private String currentPath; //当前处理的目录
         private String srcEncode; //原始编码
         private String destEncode; //目标编码
@@ -114,8 +128,8 @@ public class ChangeFileEncode {
         }
 
         public String getCurrentPath() {
-            if(StringUtils.isBlank(currentPath)){
-                return getPath();
+            if (StringUtils.isBlank(currentPath)) {
+                return getSrcPath();
             }
             return currentPath;
         }
@@ -124,12 +138,20 @@ public class ChangeFileEncode {
             this.currentPath = currentPath;
         }
 
-        public String getPath() {
-            return path;
+        public String getSrcPath() {
+            return srcPath;
         }
 
-        public void setPath(String path) {
-            this.path = path;
+        public void setSrcPath(String srcPath) {
+            this.srcPath = srcPath;
+        }
+
+        public String getDestPath() {
+            return destPath;
+        }
+
+        public void setDestPath(String destPath) {
+            this.destPath = destPath;
         }
 
         public String getSrcEncode() {

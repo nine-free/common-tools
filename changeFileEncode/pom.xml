@@ -61,7 +61,7 @@
                                     <addClasspath>true</addClasspath>
                                     <classpathPrefix>lib/</classpathPrefix>
                                     <!--<mainClass>com.soft1010.tools.ChangeFileEncode</mainClass>-->
-                                    <mainClass>com.soft1010.tools.ChangeFileEncode</mainClass>
+                                    <mainClass>com.soft1010.tools.ChangeFileEncodeExt</mainClass>
                                 </manifest>
                             </archive>
                         </configuration>
