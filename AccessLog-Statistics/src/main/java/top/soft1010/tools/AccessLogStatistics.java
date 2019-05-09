@@ -1,4 +1,4 @@
-package com.soft1010.tools;
+package top.soft1010.tools;
 
 import org.apache.commons.lang3.StringUtils;
 

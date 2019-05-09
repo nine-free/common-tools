@@ -1,4 +1,4 @@
-package com.soft1010.tools;
+package top.soft1010.tools;
 
 import java.util.List;
 import java.util.Map;

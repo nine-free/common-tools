@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>common-tools</artifactId>
-        <groupId>com.soft1010.tools</groupId>
+        <groupId>top.soft1010.tools</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -61,8 +61,8 @@
                                 <manifest>
                                     <addClasspath>true</addClasspath>
                                     <classpathPrefix>lib/</classpathPrefix>
-                                    <!--<mainClass>com.soft1010.tools.ChangeFileEncode</mainClass>-->
-                                    <mainClass>com.soft1010.tools.AccessLogStatistics</mainClass>
+                                    <!--<mainClass>ChangeFileEncode</mainClass>-->
+                                    <mainClass>top.soft1010.tools.AccessLogStatistics</mainClass>
                                 </manifest>
                             </archive>
                         </configuration>
