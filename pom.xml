@@ -12,6 +12,7 @@
         <module>changeFileEncode</module>
         <module>AccessLog-Statistics</module>
         <module>pdf-tools</module>
+        <module>excel-tools</module>
     </modules>
 
     <properties>
