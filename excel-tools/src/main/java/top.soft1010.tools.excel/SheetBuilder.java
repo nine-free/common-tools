@@ -30,11 +30,17 @@ public final class SheetBuilder {
         return this;
     }
 
+    /**
+     * @param rowNum
+     * @param titles
+     * @param cellStyle
+     * @return
+     */
     public SheetBuilder addHeader(int rowNum, String[] titles, CellStyle cellStyle) {
         checkNotNull(sheet, "sheet 为空");
-        if (cellStyle == null) {
-            cellStyle = ExcelUtil.defaultHeadCellStyle(sheet.getWorkbook());
-        }
+//        if (cellStyle == null) {
+//            cellStyle = ExcelUtil.defaultHeadCellStyle(sheet.getWorkbook());
+//        }
         int length = 0;
         if (titles == null || (length = titles.length) == 0)
             return this;
@@ -58,13 +64,13 @@ public final class SheetBuilder {
         checkNotNull(sheet, "sheet 为空");
         CellStyle contentStyle1 = null;
         CellStyle contentStyle2 = null;
-        if (cellStyle != null) {
-            contentStyle1 = cellStyle;
-            contentStyle2 = cellStyle;
-        } else {
-            contentStyle1 = ExcelUtil.defaultContentCellStyle1(sheet.getWorkbook());
-            contentStyle2 = ExcelUtil.defaultContentCellStyle2(sheet.getWorkbook());
-        }
+//        if (cellStyle != null) {
+//            contentStyle1 = cellStyle;
+//            contentStyle2 = cellStyle;
+//        } else {
+//            contentStyle1 = ExcelUtil.defaultContentCellStyle1(sheet.getWorkbook());
+//            contentStyle2 = ExcelUtil.defaultContentCellStyle2(sheet.getWorkbook());
+//        }
         int size = 0;
         if (datas == null || (size = datas.size()) == 0)
             return this;
@@ -81,14 +87,26 @@ public final class SheetBuilder {
             row.setZeroHeight(false);
             for (int j = 0; j < length; j++) {
                 cell = row.createCell(j);
-                if (i % 2 == 0) {
-                    cell.setCellStyle(contentStyle1);
-                } else {
-                    cell.setCellStyle(contentStyle2);
-                }
+//                if (i % 2 == 0) {
+//                    cell.setCellStyle(contentStyle1);
+//                } else {
+//                    cell.setCellStyle(contentStyle2);
+//                }
+                //默认都设置为字符串 根据具体情况调整为数字，日期等
                 cell.setCellValue(objs[j] == null ? "" : objs[j].toString());
             }
         }
+        return this;
+    }
+
+    public SheetBuilder addCell(int row, int col, Object value, CellStyle cellStyle) {
+        checkNotNull(sheet, "sheet 为空");
+        Row row1 = sheet.getRow(row) == null ? sheet.createRow(row) : sheet.getRow(row);
+        Cell cell = row1.getCell(col) == null ? row1.createCell(col) : row1.getCell(col);
+        if (cellStyle != null) {
+            cell.setCellStyle(cellStyle);
+        }
+        cell.setCellValue(value == null ? "" : value.toString());
         return this;
     }
 
@@ -96,13 +114,13 @@ public final class SheetBuilder {
      * @param cellRangeAddresses
      * @return
      */
-    public Sheet addMergeCells(List<CellRangeAddress> cellRangeAddresses) {
+    public SheetBuilder addMergeCells(List<CellRangeAddress> cellRangeAddresses) {
         checkNotNull(sheet, "sheet 为空");
         for (CellRangeAddress cellRangeAddress : cellRangeAddresses
                 ) {
             sheet.addMergedRegion(cellRangeAddress);
         }
-        return sheet;
+        return this;
     }
 
 }

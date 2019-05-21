@@ -86,18 +86,22 @@ public class TestExcelUtil {
 
             List<Object[]> datas = new ArrayList<Object[]>();
             datas.add(new Object[]{1, 2, 3, 4, 5, 6});
+            datas.add(new Object[]{1, 2, 3, 4, 5, 6});
+            datas.add(new Object[]{1, 2, 3, 4, 5, 6});
 
             List<CellRangeAddress> cellRangeAddresses = new ArrayList<CellRangeAddress>();
             cellRangeAddresses.add(new CellRangeAddress(0, 0, 1, 2));
 
             new SheetBuilder(excel.getSheet("sheet1"))
                     .addHeader(0, titles1)
-                    .addContentData(null, datas, 1);
+                    .addContentData(null, datas, 1)
+                    .addCell(1, 6, "=SUM(A2:F2)", null);//支持公式 注意这个求和必须保证求和的单元格都是数字，字符串是不能求和的
 
             new SheetBuilder(excel.getSheet("sheet2"))
                     .addHeader(0, titles2)
                     .addContentData(null, datas, 1)
                     .addMergeCells(cellRangeAddresses);
+
 
             excel.write("D:\\", System.currentTimeMillis() + "tmp.xlsx");
         } catch (Exception e) {
